@@ -34,6 +34,13 @@ class SwinBlockSequenceMOE(BaseModule):
             Default: False.
         init_cfg (dict | list | None, optional): The init config.
             Default: None.
+        alternate_moe (int): Indicator of the sequence of moe block in the moe
+            layer. -1 means no moe block will be added.0 means the blocks with
+            even number will be moe blocks. 1 is means the blocks with odd
+            number will be moe blocks. 2 means all blocks are moe blocks
+        Default: -1
+        num_experts (int): Number of experts in every moe block.
+            Default: 4.
     """
 
     def __init__(self,
@@ -52,8 +59,9 @@ class SwinBlockSequenceMOE(BaseModule):
                  norm_cfg=dict(type='LN'),
                  with_cp=False,
                  init_cfg=None,
+                 alternate_moe=-1,
                  num_experts=4,
-                 alternate_moe=-1):
+                 ):
         super().__init__(init_cfg=init_cfg)
 
         if isinstance(drop_path_rate, list):
@@ -158,14 +166,13 @@ class SwinTransformerMOE(SwinTransformer):
             Defaults to None.
         moe_layer (int): The layer in which the moe blocks will be added.
             Default: -1 (-1 means no moe blocks are added)
-        num_experts (int): Number of experts in every moe block.
-            Default: 4.
         alternate_moe (int): Indicator of the sequence of moe block in the moe
             layer. -1 means no moe block will be added.0 means the blocks with
             even number will be moe blocks. 1 is means the blocks with odd
             number will be moe blocks. 2 means all blocks are moe blocks
         Default: -1
-
+        num_experts (int): Number of experts in every moe block.
+            Default: 4.
     """
     
     def __init__(self,
