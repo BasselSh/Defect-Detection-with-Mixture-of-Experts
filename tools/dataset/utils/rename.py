@@ -8,8 +8,8 @@ from functools import partial
 
 ''' 
 script to rename the images of a dataset
-Enter the json file of the
-The dataset should be in the coco format as follow:
+Enter the path to the annotation folder
+The dataset directories and files should be as follow:
 
 -dataset
     -annotations
