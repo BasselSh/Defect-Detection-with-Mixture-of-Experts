@@ -12,7 +12,7 @@ class Inferencer():
     
     def infer(self, img):
         datasample = inference_detector(self.model, img)
-        self.visualizer.add_datasample(name='pred', image=img, data_sample=datasample, draw_gt=False)
+        self.visualizer.add_datasample(name='pred', image=img, data_sample=datasample, draw_gt=False, pred_score_thr=0.6)
         img = self.visualizer._image 
         return img
 
