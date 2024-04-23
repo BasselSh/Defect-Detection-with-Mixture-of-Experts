@@ -1,6 +1,6 @@
 
 dataset_type = 'NEUDETDataset'
-data_root = 'data/NEU_DET/'
+data_root = 'data/mmdet/NEU_DET/'
 
 backend_args = None
 
