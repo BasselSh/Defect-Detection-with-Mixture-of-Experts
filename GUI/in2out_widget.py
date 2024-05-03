@@ -42,6 +42,7 @@ corruptions = [
 class AugmentGUI(Ui_Dialog):
     def setupUi(self, Dialog):
         super().setupUi(Dialog)
+        self.categories = ['Crazing', 'Inclusion', 'Patches', 'Pitted-surface','Rolled-in scale','Scratches']
         cfg_path = '/home/huemorgen/Defect-Detection-with-Mixture-of-Experts/configs/swin/swin_tiny.py'
         ckpt = '/home/huemorgen/Defect-Detection-with-Mixture-of-Experts//weights/epoch_12.pth'
         self.inferencer = Inferencer(cfg_path, ckpt)
@@ -50,6 +51,7 @@ class AugmentGUI(Ui_Dialog):
         self._init_cfg(cfg)
         self._init_connections()
         self._init_corruptions()
+        
 
     def _init_defaults(self):
         W = 200
@@ -67,6 +69,8 @@ class AugmentGUI(Ui_Dialog):
         self.slider_2.setRange(1,5)
         self.slider_3.setTickInterval(1)
         self.slider_3.setRange(1,5)
+        self.model_label.setPixmap(QtGui.QPixmap("GUI/images/dl_model.jpg"))
+        self.model_label.setScaledContents(True)
         
     def _init_cfg(self, cfg):
         self.cfg = cfg
@@ -75,6 +79,7 @@ class AugmentGUI(Ui_Dialog):
         self.img_id = 0
         self.load_img(self.img_id)
         self.pipeline = dataloader_cfg.dataset.pipeline
+        
 
     def _init_connections(self):
         # self.folder.clicked.connect(self._button_clk)
@@ -87,7 +92,7 @@ class AugmentGUI(Ui_Dialog):
         self.slider_1.valueChanged.connect(self.update_severity)
         self.slider_2.valueChanged.connect(self.update_severity)
         self.slider_3.valueChanged.connect(self.update_severity)
-        self.predict.clicked.connect(self.inferPressed)
+        # self.predict.clicked.connect(self.inferPressed)
 
     def _init_corruptions(self):
         self._add_curroption_to_comboBox(self.comboBox_1)
@@ -176,9 +181,9 @@ class AugmentGUI(Ui_Dialog):
         instances = data['data_samples'].gt_instances
         instances.bboxes = instances.bboxes.numpy()
         instances.labels = instances.labels.numpy()
-        classes = self.dataset.METAINFO['classes']
+        self.classes = self.dataset.METAINFO['classes']
         palette = self.dataset.METAINFO['palette']
-        img_with_gt = viz._draw_instances(img_np.copy(),instances,classes=classes, palette=palette)
+        img_with_gt = viz._draw_instances(img_np.copy(),instances, classes=self.classes, palette=palette)
         return img_with_gt
 
     def inferPressed(self):
