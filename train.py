@@ -8,13 +8,15 @@ from mmengine.registry import RUNNERS
 from mmengine.runner import Runner
 
 from mmdet.utils import setup_cache_size_limit_of_dynamo
-from wrappers import *
+# from defect import *
 from mmdet.models.backbones import swin
+import json
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a detector')
     parser.add_argument('config', help='train config file path')
     parser.add_argument('--work-dir', help='the dir to save logs and models')
+    parser.add_argument('--task-name', help='Task name saved in ClearML')
     parser.add_argument('--exp', default=None, help='number of experiment')
     parser.add_argument(
         '--amp',
@@ -80,21 +82,35 @@ def main():
     cfg.default_hooks.checkpoint.save_best = save_best
     
     #reading and updating experiment number
-    # exp = args.exp
-    # if exp is None:
-    #     with open("exp_id.txt",'r') as f:
-    #         experiment_id = int(f.read())
-    #     experiment_id+=1
-    # elif isinstance(exp, str):
-    #     experiment_id = int(exp)
-    # with open("exp_id.txt",'w') as f:
-    #         f.write(str(experiment_id))
     
-    # clearml = cfg.visualizer.vis_backends[0]
-    # task_name = clearml['init_kwargs']['task_name']
-    # task_name += str(experiment_id)
-    # clearml['init_kwargs']['task_name'] = task_name
     
+    
+    task_name = args.task_name
+    if task_name is None:
+        task_name = osp.splitext(osp.basename(args.config))[0]
+
+    #loading
+    # with open(".exp.json",'r') as f:
+    d = json.load(open(".exp.json"))
+    
+    #loading exp_id
+    if not task_name in d:
+        experiment_id = 1
+    else:
+        exp = args.exp
+        if exp is None:
+            experiment_id = d[task_name] + 1
+        else:
+            experiment_id = int(exp)
+
+    #saving
+    d[task_name] = experiment_id
+    with open(".exp.json", 'w') as f:
+            json.dump(d, f,indent=4, separators=(',', ': '))
+
+    task_name_id = task_name + f"_{experiment_id}"
+    clearml = cfg.visualizer.vis_backends[0]
+    clearml['init_kwargs']['task_name'] = task_name_id
     if 'earlystop' in cfg.default_hooks:
         cfg.default_hooks.earlystop.monitor = save_best
     cfg.launcher = args.launcher
