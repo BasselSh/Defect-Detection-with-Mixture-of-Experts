@@ -13,9 +13,7 @@ from mmdet.engine.hooks.utils import trigger_visualization_hook
 from mmdet.evaluation import DumpDetResults
 from mmdet.registry import RUNNERS
 from mmdet.utils import setup_cache_size_limit_of_dynamo
-#from wrappers.custom_hooks import *
 
-# TODO: support fuse_conv_bn and format_only
 def parse_args():
     parser = argparse.ArgumentParser(
         description='MMDet test (and eval) a model')
@@ -142,7 +140,8 @@ def main():
             DumpDetResults(out_file_path=args.out))
 
     # start testing
-    runner.test()
+    metrics = runner.test()
+    print(metrics)
 
 
 if __name__ == '__main__':
