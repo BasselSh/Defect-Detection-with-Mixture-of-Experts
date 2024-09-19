@@ -6,7 +6,8 @@ import argparse
 import glob
 from functools import partial
 
-''' 
+'''
+WARNING: THIS SCRIPTS OVERWRITES YOUR DATASET FILES 
 script to rename the images of a dataset
 Enter the path to the annotation folder
 The dataset directories and files should be as follow:
@@ -20,6 +21,7 @@ The dataset directories and files should be as follow:
     -val
     -test (optional)
 '''
+CLASSES = ['oil']
 
 def parse():
     parser = argparse.ArgumentParser()
@@ -33,8 +35,10 @@ def _rename_train_or_test(file, folder, parent, suffix='.jpg', mode='train'):
     root = osp.join(parent, mode)
     img_dicts = file['images']
     for i, img_dict in enumerate(img_dicts):
-        img_target = f'{mode}{i}'+suffix
+        
         img_name = img_dict['file_name']
+        cls = detect_classes(img_name)
+        img_target = f'{cls}_{mode}{i}'+suffix
         src = osp.join(root, img_name)
         target = osp.join(root, img_target)
         os.rename(src, target)
@@ -58,6 +62,12 @@ def rename_dataset(ann_folder, suffix):
             if mode in ann_path:
                 rename_test_train(file, mode=mode)
                 break
+
+def detect_classes(name):
+    for cls in CLASSES:
+        if cls in name:
+            return cls
+    return CLASSES[0]
 
 if __name__=="__main__":
     args = parse()
