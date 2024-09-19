@@ -12,6 +12,9 @@ class Inferencer():
     
     def infer(self, img):
         datasample = inference_detector(self.model, img)
+        self.visualizer.dataset_meta = dict({'classes':['Crazing', 'Inclusion', 'Patches', 'Pitted-surface','Rolled-in scale','Scratches'],
+                                             'palette': [(255,0,0),(0,255,0),(0,0,255),(100,100,0),(0,100,0),(100,0,100),(100,100,100)]})
+        
         self.visualizer.add_datasample(name='pred', image=img, data_sample=datasample, draw_gt=False, pred_score_thr=0.6)
         img = self.visualizer._image 
         return img

@@ -24,7 +24,7 @@ import json
 import os
 from widgets import UI_widgets
 from in2out import Ui_Dialog
-from wrappers.transforms import RotateCenter
+from defect.wrappers.transforms import RotateCenter
 import numpy as np
 from corruptions import motion_blur
 from mmdet.visualization import DetLocalVisualizer
@@ -44,7 +44,7 @@ class AugmentGUI(Ui_Dialog):
         super().setupUi(Dialog)
         self.categories = ['Crazing', 'Inclusion', 'Patches', 'Pitted-surface','Rolled-in scale','Scratches']
         cfg_path = '/home/huemorgen/Defect-Detection-with-Mixture-of-Experts/configs/swin/swin_tiny.py'
-        ckpt = '/home/huemorgen/Defect-Detection-with-Mixture-of-Experts//weights/epoch_12.pth'
+        ckpt = '/home/huemorgen/Defect-Detection-with-Mixture-of-Experts/weights/epoch_12.pth'
         self.inferencer = Inferencer(cfg_path, ckpt)
         self._init_defaults()
         cfg = Config.fromfile(cfg_path)
