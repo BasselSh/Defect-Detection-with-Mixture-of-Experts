@@ -1,6 +1,8 @@
 
 This work is built on the repository https://github.com/Chan-Sun/IFSDD. Thanks for making it open source!
 
+Check source code in the folder ### defect
+
 ## installation
 
 1. Create conda environment
